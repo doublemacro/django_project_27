@@ -2,6 +2,8 @@ from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
 
 from .forms import BookForm
+from .models import Book
+
 
 # Create your views here.
 
@@ -12,6 +14,13 @@ def home(request: HttpRequest):
 
 # function-based view:
 # CRUD: Create, Read, Update, Delete.
+
+def list_books(request: HttpRequest):
+    # trebuie sa listam cartile din baza de date.
+    # accesare de carti:
+    # QuerySet
+    books = Book.objects.all()
+    return render(request, "books/home.html", context={"books": books})
 
 def create_book(request: HttpRequest):
     if request.method == "POST":
