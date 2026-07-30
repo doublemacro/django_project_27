@@ -35,6 +35,26 @@ def list_books(request: HttpRequest):
         books = Book.objects.all().order_by("-title")
     return render(request, "books/home.html", context={"books": books})
 
+def list_user_books(request: HttpRequest, user_pk: int):
+    # trebuie sa listam cartile din baza de date.
+    # accesare de carti:
+    # QuerySet
+
+    # request.GET este un dictionar care contine toate url params.
+    # "sort" este parametrul din url care ne indica ce sortare facem.
+
+    sort = request.GET.get("sort")
+    books = Book.objects.filter(user_id=user_pk).order_by("pk")
+
+    # srt_b = sorted(list(books), key=lambda x: x.title.lower())
+
+    if sort == "asc":
+        books = Book.objects.filter(user_id=user_pk).order_by("title")
+    if sort == "desc":
+        books = Book.objects.filter(user_id=user_pk).order_by("-title")
+    return render(request, "books/home.html", context={"books": books})
+
+
 @login_required
 def create_book(request: HttpRequest):
     if request.method == "POST":
@@ -70,11 +90,15 @@ def update_book(request: HttpRequest, pk: int):
         return render(request, "books/update_book_form.html", context={"form": form})
 
 
+@login_required
 def delete_book(request: HttpRequest, pk: int):
     book = get_object_or_404(Book, pk=pk)
 
-    if request.method == "POST":
-        book.delete()
-        return redirect("home")
+    if request.user.pk == book.user.pk:
+        if request.method == "POST":
+            book.delete()
+            return redirect("home")
+        else:
+            return render(request, "books/book_confirm_delete.html", context={"book": book})
     else:
-        return render(request, "books/book_confirm_delete.html", context={"book": book})
+        return HttpResponse("You are not allowed to delete another user's book.")
