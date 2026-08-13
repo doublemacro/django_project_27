@@ -71,7 +71,7 @@ def create_book(request: HttpRequest):
         # in cazul asta, request-ul poate fi GET, PUT, PATCH, DELETE, etc...
         form = BookForm()
         list1 = [10, 20, 30, 40]
-        return render(request, "books/book_form.html", context={"form": form, "list1": list1})
+    return render(request, "books/book_form.html", context={"form": form, "list1": list1})
 
 def update_book(request: HttpRequest, pk: int):
     book = get_object_or_404(Book, pk=pk)
