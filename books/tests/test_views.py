@@ -22,16 +22,21 @@ def test_create_user():
         password="password123"
     )
     assert user.username == "test123"
+    assert user.check_password("password123")
 
 
 # fixture
 
 @pytest.fixture
-def logged_in_client(db, client: Client) -> Client:
-    user = User.objects.create_user(
+def user(db) -> User:
+    u = User.objects.create_user(
         username="test123",
         password="password123"
     )
+    return u
+
+@pytest.fixture
+def logged_in_client(user, client: Client) -> Client:
     # cream un browser simulat, logat, care poate face requesturi HTTP:
     client.login(
         username="test123",
@@ -64,3 +69,23 @@ def test_does_book_exist(logged_in_client, book):
 
     assert response.status_code == 200
     assert "testbook" in str(response.content)
+
+
+def test_user_book_count(user):
+    book1 = Book.objects.create(title="book 1", author="author 1", user=user)
+    book2 = Book.objects.create(title="book 2", author="author 2", user=user)
+    # conceptual, ce trebuie sa facem aici?
+    # trebuie sa ne uitam in baza de date, si sa numaram cartile, care apartin user-ului.
+    books = list(Book.objects.filter(user_id=user.pk))
+    assert len(books) == 2
+
+
+def test_user_book_count_html(user):
+    book1 = Book.objects.create(title="book 1", author="author 1", user=user)
+    book2 = Book.objects.create(title="book 2", author="author 2", user=user)
+    book2 = Book.objects.create(title="book 3", author="author 3", user=user)
+
+    # conceptual, ce trebuie sa facem aici?
+    # trebuie sa ne uitam in baza de date, si sa numaram cartile, care apartin user-ului.
+    books = list(Book.objects.filter(user_id=user.pk))
+    assert len(books) == 2
