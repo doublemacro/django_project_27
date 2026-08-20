@@ -1,0 +1,29 @@
+Creati o clasa:
+ProcessFileContent
+Care continue metodele:
+get_file_content(p), care returneaza intregul continut al fisierului in format string.
+write_to_file(string_content, p), care scrie tot continutul acelui string, intr-un fisier p, suprascriind tot fisierul. Deci trebuie sa deschideti fisierul cu overwrite, deci optiunea "w".
+Si inca o metoda:
+process(p)
+Care primeste un "p", care este path-ul catre un fisier. in acest caz "data.txt". Acest fisier contine text in forma:
+48,50,130,200,126,etc.....
+Acea metoda apeleaza self.get_file_content(p), deci prin acea metoda citeste fisierul in format string, separa numerele din string, inlatura toate numerele mai mici de 48 si mai mari de 126, si le scrie inapoi in fisier, in acelasi format, numere separate de virgula.
+
+Creati o a doua clasa:
+ProcessFileToText
+Care mosteneste prima clasa, si suprascrie metoda:
+process(p)
+"p" este tot acel path catre fisier, citeste continutul cu aceeasi metoda get_file_content, ia fiecare numar si il converteste in character, deci numarul 97 devine 'a'. Puteti folosi chr(numarul_dat) pentru a converti un numar intr-un caracter.
+Folositi write_to_file sa scrieti acele caractere, in acelasi format, separate de virgula.
+
+
+Suport curs:
+
+pentru a citi dintr-un fisier:
+
+with open(filename, "r") as file:
+    content = file.read()
+
+pentru a scrie intr-un fisier, cu optiunea de overwrite:
+with open("demofile.txt", "w") as f:
+    f.write("Now the file has more content!")
