@@ -28,6 +28,7 @@ SECRET_KEY = 'django-insecure-*k6_*cj*6z_9uz$%ih9d_a+8levz%%&c+u93_p!9g1vc7x*89f
 DEBUG = True
 
 ALLOWED_HOSTS = ["book-manager-scf6.onrender.com"]
+CSRF_TRUSTED_ORIGINS = ["https://book-manager-scf6.onrender.com"]
 
 
 # Application definition
