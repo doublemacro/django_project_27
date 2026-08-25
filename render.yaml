@@ -11,8 +11,8 @@ services:
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: DJANGO_ALLOWED_HOSTS
-        value: book-manager.onrender.com
+        value: book-manager-scf6.onrender.com
       - key: DJANGO_CSRF_TRUSTED_ORIGINS
-        value: https://book-manager.onrender.com
+        value: https://book-manager-scf6.onrender.com
       - key: WEB_CONCURRENCY
         value: 4
