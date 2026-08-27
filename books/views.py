@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .forms import BookForm
+from .forms import BookForm, CommentForm
 from .models import Book
 
 
@@ -107,3 +107,29 @@ def delete_book(request: HttpRequest, pk: int):
             return render(request, "books/book_confirm_delete.html", context={"book": book})
     else:
         return HttpResponse("You are not allowed to delete another user's book.")
+
+def view_book(request: HttpRequest, book_pk: int):
+    book = get_object_or_404(Book, pk=book_pk)
+    comments = book.comments
+
+    return render(request, "books/book.html", context={"book": book, "comments": comments})
+
+
+@login_required
+def add_comment(request: HttpRequest, book_pk: int):
+    book = get_object_or_404(Book, pk=book_pk)
+    user = request.user
+
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            # cream un comment
+            comment = form.save(commit=False)
+            comment.book = book
+            comment.user = user
+            comment.save()
+
+            messages.success(request, "Added new comment!")
+            return redirect("home")
+
+    return redirect("home")
